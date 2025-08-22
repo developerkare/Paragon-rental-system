@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tenant Dashboard</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+      }
+
+      .sidebar {
+        width: 220px;
+        background-color: blue;
+        height: 100vh;
+        color: white;
+        padding-top: 20px;
+        position: fixed;
+      }
+
+      .sidebar h2 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .sidebar a {
+        display: block;
+        padding: 15px 20px;
+        color: white;
+        text-decoration: none;
+      }
+
+      .sidebar a:hover {
+        background-color: #34495e;
+      }
+
+      .main {
+        margin-left: 220px;
+        padding: 20px;
+        flex: 1;
+        background-color: lightblue;
+        min-height: 100vh;
+      }
+
+      .message-box {
+        background: #dff0d8;
+        border-left: 5px solid #3c763d;
+        color: goldenrod;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        display: none;
+      }
+
+      .card,
+      .form-box {
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .amount-boxes {
+        display: flex;
+        gap: 20px;
+      }
+
+      .card h3 {
+        margin: 0 0 10px;
+      }
+
+      .table-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #2980b9;
+        color: white;
+      }
+
+      .form-box label {
+        display: block;
+        margin: 10px 0 5px;
+      }
+
+      .form-box input,
+      .form-box select,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+      }
+
+      .btn {
+        background-color: #2980b9;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        background-color: #1c5980;
+      }
+
+      .link-buttons {
+        margin-bottom: 20px;
+      }
+
+      .link-buttons button {
+        margin-right: 10px;
+      }
+
+      .info {
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Tenant Panel</h2>
+      <a href="#" onclick="showDashboard()">Dashboard</a>
+      <a href="#" onclick="showRegistrationSection()">Registration</a>
+      <a href="#" onclick="showComplaints()">Complaints</a>
+      <a href="#" onclick="showFeedback()">Feedback</a>
+      <a href="#" onclick="showPayment()">Payment</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Message Box -->
+      <div id="message" class="message-box"></div>
+
+      <!-- Dashboard -->
+      <div id="dashboard-section">
+
+
+        <div class="table-container">
+          <h3>My Bills</h3>
+          {% if bills %}
+          <table>
+            <thead>
+              <tr>
+                <th>Bill No</th>
+                <th>Month</th>
+                <th>Rent</th>
+                <th>Water Units</th>
+                <th>Deposit</th>
+                <th>Total</th>
+                <th>Payment Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for bill in bills %}
+              <tr>
+                <td>{{ bill[0] }}</td>
+                <td>{{ bill[1] }}</td>
+                <td>KES {{ bill[2] }}</td>
+                <td>{{ bill[3] }}</td>
+                <td>KES {{ bill[4] }}</td>
+                <td><strong>KES {{ bill[5] }}</strong></td>
+                <td>{{ bill[6] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p>No bills available.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Registration/Profile -->
+      <div id="profile-section" style="display: none">
+        <h1>Registration</h1>
+        <div class="link-buttons">
+          <button class="btn" onclick="showForm()">Registration</button>
+          <button class="btn" onclick="showInfo()">Profile</button>
+        </div>
+
+        <!-- Form -->
+        <div class="form-box" id="registration-box" style="display: none">
+          <!-- Registration Form -->
+          <form action="/register-details" method="POST" id="registration-form">
+            <h3>Tenant Registration</h3>
+
+            <label>ID/Passport:</label>
+            <input type="text" name="id" required />
+
+            <label>Full Name:</label>
+            <input type="text" name="name" required />
+
+            <label>Email:</label>
+            <input type="email" name="email" required />
+
+            <label>Disability:</label>
+            <input type="text" name="disability" />
+
+            <label>Phone Number:</label>
+            <input type="text" name="phone" required />
+
+            <label>House Number:</label>
+            <input type="text" name="house" required />
+
+            <label>No. of Rooms:</label>
+            <select name="rooms" required>
+              <option value="">-- Select --</option>
+              <option value="Shop">Shop</option>
+              <option value="Bedsitter">Bedsitter</option>
+              <option value="1 Bedroom">1 Bedroom</option>
+              <option value="2 Bedroom">2 Bedroom</option>
+              <option value="3 Bedroom">3 Bedroom</option>
+              <option value="4 Bedroom">4 Bedroom</option>
+              <option value="5 Bedroom">5 Bedroom</option>
+            </select>
+
+            <label>Emergency Contact:</label>
+            <input type="text" name="emergency" required />
+
+            <button class="btn" type="submit">Submit</button>
+          </form>
+        </div>
+        <!-- Profile Info -->
+        <div class="card" id="display-info" style="display: none">
+          <h3>Full Registration Details</h3>
+          {% if profile %}
+          <div class="info">
+            <strong>ID/Passport:</strong> {{ profile[1] }}<br />
+            <strong>Full Name:</strong> {{ profile[2] }}<br />
+            <strong>Email:</strong> {{ profile[3] }}<br />
+            <strong>Disability:</strong> {{ profile[4] }}<br />
+            <strong>Phone Number:</strong> {{ profile[5] }}<br />
+            <strong>House Number:</strong> {{ profile[6] }}<br />
+            <strong>No. of Rooms:</strong> {{ profile[7] }}<br />
+            <strong>Emergency Contact:</strong> {{ profile[8] }}
+          </div>
+          {% else %}
+          <p>No registration data found.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Complaints -->
+      <div id="complaints-section" style="display: none">
+        <h1>Complaints</h1>
+        <form action="/submit-complaint" method="POST">
+          <label for="complaint">Enter Your Complaint:</label><br />
+          <textarea
+            name="complaint"
+            id="complaintText"
+            rows="6"
+            required
+          ></textarea
+          ><br />
+          <button class="btn" type="submit">Submit Complaint</button>
+        </form>
+      </div>
+
+      <!-- Feedback -->
+      <div id="feedback-section" style="display: none">
+        <h1>Feedback</h1>
+        <form action="/submit-feedback" method="POST">
+          <label for="feedback">Enter Your Feedback:</label><br />
+          <textarea
+            name="feedback"
+            id="feedbackText"
+            rows="6"
+            required
+          ></textarea
+          ><br />
+          <button class="btn" type="submit">Submit Feedback</button>
+        </form>
+      </div>
+
+      <!-- Payment Section -->
+      <div id="payment-section" style="display: none">
+        <h1>Make a Payment</h1>
+        <form onsubmit="submitPayment(event)">
+          <label>Amount (KES):</label>
+          <input type="number" id="pay-amount" required />
+
+          <label>Phone (2547...):</label>
+          <input type="text" id="pay-phone" required />
+
+          <input type="hidden" id="pay-username" value="username_here" />
+
+          <button class="btn" type="submit">Pay Now</button>
+        </form>
+
+        <div
+          id="payment-status"
+          class="message-box"
+          style="display: none"
+        ></div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      let registrationData = {};
+
+      function hideAllSections() {
+        document.getElementById("dashboard-section").style.display = "none";
+        document.getElementById("profile-section").style.display = "none";
+        document.getElementById("complaints-section").style.display = "none";
+        document.getElementById("feedback-section").style.display = "none";
+        document.getElementById("payment-section").style.display = "none";
+      }
+
+      function showDashboard() {
+        hideAllSections();
+        document.getElementById("dashboard-section").style.display = "block";
+      }
+
+      function showRegistrationSection() {
+        hideAllSections();
+        document.getElementById("profile-section").style.display = "block";
+        showForm();
+      }
+
+      function showComplaints() {
+        hideAllSections();
+        document.getElementById("complaints-section").style.display = "block";
+      }
+
+      function showFeedback() {
+        hideAllSections();
+        document.getElementById("feedback-section").style.display = "block";
+      }
+
+      function showForm() {
+        document.getElementById("registration-box").style.display = "block";
+        document.getElementById("display-info").style.display = "none";
+      }
+
+      function showInfo() {
+        document.getElementById("registration-box").style.display = "none";
+        document.getElementById("display-info").style.display = "block";
+      }
+
+      function showMessage(text) {
+        const msgBox = document.getElementById("message");
+        msgBox.style.display = "block";
+        msgBox.textContent = text;
+        setTimeout(() => (msgBox.style.display = "none"), 4000);
+      }
+
+      function saveData() {
+        registrationData = {
+          id: document.getElementById("id").value,
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value,
+          disability: document.getElementById("disability").value,
+          phone: document.getElementById("phone").value,
+          house: document.getElementById("house").value,
+          rooms: document.getElementById("rooms").value,
+          emergency: document.getElementById("emergency").value,
+        };
+        showMessage("Registration saved successfully.");
+      }
+
+      function saveComplaint(event) {
+        event.preventDefault();
+        const complaint = document.getElementById("complaintText").value;
+        localStorage.setItem("tenantComplaint", complaint);
+        showMessage("Your complaint has been saved locally.");
+        document.getElementById("complaintText").value = "";
+      }
+
+      function saveFeedback(event) {
+        event.preventDefault();
+        const feedback = document.getElementById("feedbackText").value;
+        localStorage.setItem("tenantFeedback", feedback);
+        showMessage("Your feedback has been saved locally.");
+        document.getElementById("feedbackText").value = "";
+      }
+
+      function showPayment() {
+        hideAllSections();
+        document.getElementById("payment-section").style.display = "block";
+      }
+
+      function submitPayment(e) {
+        e.preventDefault();
+
+        const amount = document.getElementById("pay-amount").value;
+        const phone = document.getElementById("pay-phone").value;
+        const username = document.getElementById("pay-username").value;
+
+        fetch("/initiate-payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ amount, phone, username }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const statusBox = document.getElementById("payment-status");
+            statusBox.style.display = "block";
+            statusBox.textContent =
+              data.CustomerMessage || data.error || "Payment status unknown.";
+          })
+          .catch((err) => {
+            console.error(err);
+            document.getElementById("payment-status").textContent =
+              "Failed to initiate payment.";
+          });
+
+      }
+    </script>
+  </body>
+</html>

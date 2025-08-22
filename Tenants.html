@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Tenant Login</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: url('t2login.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 400px;
+      height: 520px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, .5);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+      margin: 80px auto;
+      overflow: hidden;
+    }
+
+    .form-box {
+      position: absolute;
+      width: 100%;
+      padding: 40px;
+      transition: 0.5s;
+    }
+
+    .form-box h2 {
+      font-size: 2em;
+      color: #162938;
+      text-align: center;
+    }
+
+    .input-box {
+      position: relative;
+      width: 100%;
+      height: 50px;
+      border-bottom: 2px solid #162938;
+      margin: 30px 0;
+    }
+
+    .input-box input {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 1em;
+      color: #162938;
+      font-weight: 600;
+      padding: 0 35px 0 5px;
+    }
+
+    .input-box label {
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      transform: translateY(-50%);
+      font-size: 1em;
+      color: #162938;
+      font-weight: 500;
+      pointer-events: none;
+      transition: .3s;
+    }
+
+    .input-box input:focus~label,
+    .input-box input:valid~label {
+      top: -5px;
+    }
+
+    .remember-forgot {
+      font-size: 0.9em;
+      color: #162938;
+      font-weight: 500;
+      margin: -15px 0 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .remember-forgot label input {
+      accent-color: #162938;
+      margin-right: 3px;
+    }
+
+    .remember-forgot a {
+      color: #162938;
+      text-decoration: none;
+    }
+
+    .remember-forgot a:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      width: 100%;
+      height: 45px;
+      background: #162938;
+      border: none;
+      outline: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .login-register {
+      font-size: 0.9em;
+      color: #162938;
+      text-align: center;
+      font-weight: 500;
+      margin: 25px 0 10px;
+    }
+
+    .login-register a {
+      color: #162938;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-register a:hover {
+      text-decoration: underline;
+    }
+
+    .form-box.login {
+      left: 0;
+    }
+
+    .form-box.register {
+      left: 100%;
+    }
+
+    .wrapper.active .form-box.login {
+      left: -100%;
+    }
+
+    .wrapper.active .form-box.register {
+      left: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper" id="wrapper">
+    <!-- Login Form -->
+    <div class="form-box login">
+      <h2>Login</h2>
+      <form action="tdashboard.html" method="get">
+        <div class="input-box">
+          <input type="text" required>
+          <label>Username</label>
+        </div>
+        <div class="input-box">
+          <input type="password" required>
+          <label>Password</label>
+        </div>
+        <div class="remember-forgot">
+          <label><input type="checkbox">Remember me</label>
+          <a href="#">Forgot Password?</a>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <div class="login-register">
+          <p>Don't have an account? <a href="#" onclick="toggleForm()">Register</a></p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="form-box register">
+      <h2>Registration</h2>
+      <form action="#">
+        <div class="input-box">
+          <input type="text" required>
+          <label>Username</label>
+        </div>
+        <div class="input-box">
+          <input type="password" required>
+          <label>Password</label>
+        </div>
+        <div class="remember-forgot">
+          <label><input type="checkbox">I agree to the terms & conditions</label>
+        </div>
+        <button type="submit" class="btn">Register</button>
+        <div class="login-register">
+          <p>Already have an account? <a href="#" onclick="toggleForm()">Login</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function toggleForm() {
+      document.getElementById('wrapper').classList.toggle('active');
+    }
+  </script>
+</body>
+
+</html>
