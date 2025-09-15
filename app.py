@@ -14,7 +14,7 @@ cursor = db.cursor(buffered=True)
 
 # Import the tkinter login function from your module
 def launch_tkinter_app():
-    os.system(r'python "C:\\Users\\HILDA\\Desktop\\Paragon rentals\\Management.py"')
+    os.system(r'python "C:\\Users\\Hp\\Paragon-rental-system\\Management.py"')
 
 @app.route('/Rental System')
 def main():

@@ -9,11 +9,11 @@ import mysql.connector
 root=Tk()
 root.title('Login')
 root.geometry('925x500+300+200')
-root.iconbitmap(r"C:\Users\HILDA\Desktop\Paragon rentals\icon.ico")
+root.iconbitmap(r"C:\Users\Hp\Paragon-rental-system\icon.ico")
 root.configure(bg='grey')
 root.resizable(False,False)
 
-img = PhotoImage(file=r"C:\Users\HILDA\Desktop\Paragon rentals\Login.png")
+img = PhotoImage(file=r"C:\Users\Hp\Paragon-rental-system\Login.png")
 Label(root, image=img, bg='white').place(x=50, y=50)
 def  signin():
     username=user.get()
