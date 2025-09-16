@@ -11,6 +11,7 @@ import RentalManagementSystem from "./RentalManagementSystem";
 import TenantManagement from "./TenantManagement";
 import Houses from "./Houses";
 import TenantsPage from "./TenantsPage";
+import TenantDetailsPage from "./TenantDetailsPage"; // 👈 new
 import Footer from "./Footer";
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         {/* Main Content */}
         <main className="flex-grow p-6">
           <Routes>
+            {/* Default route → Login */}
             <Route
               path="/"
               element={<Login setIsAuthenticated={setIsAuthenticated} />}
@@ -52,11 +54,19 @@ export default function App() {
             />
             <Route
               path="/tenants"
-              element={isAuthenticated ? <TenantManagement /> : <Navigate to="/" />}
+              element={
+                isAuthenticated ? <TenantManagement /> : <Navigate to="/" />
+              }
             />
             <Route
               path="/tenants/:houseId"
               element={isAuthenticated ? <TenantsPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/tenant/:tenantId" // 👈 NEW route for tenant full details
+              element={
+                isAuthenticated ? <TenantDetailsPage /> : <Navigate to="/" />
+              }
             />
           </Routes>
         </main>

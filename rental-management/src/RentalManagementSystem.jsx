@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "./components/ui/button";
 import { Card, CardContent } from "./components/ui/card";
 
 export default function RentalManagementSystem() {
+
+  const location = useLocation();
+  const tenant = location.state?.tenant;
+
   const [form, setForm] = useState({
     staffName: "",
     staffContact: "",
@@ -18,6 +23,17 @@ export default function RentalManagementSystem() {
   });
 
   const [bill, setBill] = useState(null);
+
+  useEffect(() => {
+    if (tenant) {
+      setForm((prev) => ({
+        ...prev,
+        tenantName: tenant.name,
+        tenantContact: tenant.phone,
+        houseNo: tenant.houseId,
+      }));
+    }
+  }, [tenant]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

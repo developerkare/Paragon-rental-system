@@ -1,10 +1,10 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const TenantsPage = () => {
   const { houseId } = useParams();
+  const navigate = useNavigate();
 
-  // Example tenants (replace with fetch based on houseId)
   const allTenants = [
     { id: 1, name: "John Doe", email: "john@example.com", houseId: "house_1" },
     { id: 2, name: "Mary Jane", email: "mary@example.com", houseId: "house_1" },
@@ -21,7 +21,11 @@ const TenantsPage = () => {
       ) : (
         <ul className="space-y-3">
           {tenants.map((tenant) => (
-            <li key={tenant.id} className="border p-3 rounded shadow">
+            <li
+              key={tenant.id}
+              onClick={() => navigate(`/tenant/${tenant.id}`)}
+              className="border p-3 rounded shadow cursor-pointer hover:bg-gray-100"
+            >
               <p className="font-semibold">{tenant.name}</p>
               <p className="text-gray-600">{tenant.email}</p>
             </li>
