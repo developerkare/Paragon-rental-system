@@ -8,13 +8,15 @@ import { Switch } from "./ui/switch";
 import { Separator } from "./ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { UserRole } from "./UserManagementPage";
 
 interface SettingsPageProps {
   onLogout: () => void;
   onNavigate: (view: string) => void;
+  currentUser?: UserRole;
 }
 
-export function SettingsPage({ onLogout, onNavigate }: SettingsPageProps) {
+export function SettingsPage({ onLogout, onNavigate, currentUser }: SettingsPageProps) {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [maintenanceAlerts, setMaintenanceAlerts] = useState(true);
@@ -22,7 +24,7 @@ export function SettingsPage({ onLogout, onNavigate }: SettingsPageProps) {
 
   return (
     <div className="size-full flex flex-col bg-neutral-50">
-      <Navigation onLogout={onLogout} onNavigate={onNavigate} />
+      <Navigation onLogout={onLogout} onNavigate={onNavigate} currentView="settings" currentUser={currentUser} />
 
       <div className="flex-1 overflow-auto">
         <div className="max-w-5xl mx-auto p-8">

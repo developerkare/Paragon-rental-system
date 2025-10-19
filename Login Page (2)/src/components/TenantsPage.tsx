@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Navigation } from "./Navigation";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ArrowLeft, Mail, Plus, DollarSign, Home, UserX, Users, ArrowRight } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { ArrowLeft, Mail, Plus, DollarSign, Home, UserX, Users, ArrowRight, AlertCircle, Settings } from "lucide-react";
 import { Apartment } from "./ApartmentCard";
 import { AddTenantDialog } from "./AddTenantDialog";
 
@@ -187,9 +188,12 @@ export function TenantsPage({
     alert(`Would send email to: ${emails}`);
   };
 
+  // Check if apartment has units configured
+  const hasUnitsConfigured = apartment.hasUnitsConfigured !== false;
+
   return (
     <div className="size-full flex flex-col bg-neutral-50">
-      <Navigation onLogout={onLogout} onNavigate={onNavigate} />
+      <Navigation onLogout={onLogout} onNavigate={onNavigate} currentView="tenants" />
 
       <div className="flex-1 overflow-auto">
         <div className="max-w-7xl mx-auto p-8">
@@ -210,25 +214,50 @@ export function TenantsPage({
                   Manage tenants and track payments
                 </p>
               </div>
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={handleEmailAll}
-                  className="gap-2"
-                >
-                  <Mail className="size-4" />
-                  Email All Tenants
-                </Button>
-                <Button
-                  onClick={() => setIsAddDialogOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 gap-2"
-                >
-                  <Plus className="size-5" />
-                  Add Tenant
-                </Button>
-              </div>
+              {hasUnitsConfigured && (
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={handleEmailAll}
+                    className="gap-2"
+                  >
+                    <Mail className="size-4" />
+                    Email All Tenants
+                  </Button>
+                  <Button
+                    onClick={() => setIsAddDialogOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700 gap-2"
+                  >
+                    <Plus className="size-5" />
+                    Add Tenant
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Units Not Configured Warning */}
+          {!hasUnitsConfigured && (
+            <Alert className="mb-8 border-amber-300 bg-amber-50">
+              <AlertCircle className="h-4 w-4 text-amber-600" />
+              <AlertTitle className="text-amber-900">Units Not Configured</AlertTitle>
+              <AlertDescription className="text-amber-800">
+                <p className="mb-4">
+                  This apartment doesn't have any units configured yet. You need to set up units before you can add tenants or manage payments.
+                </p>
+                <Button
+                  onClick={() => onNavigateToSubPage("units")}
+                  className="bg-amber-600 hover:bg-amber-700"
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  Configure Units Now
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {hasUnitsConfigured && (
+            <>
 
           {/* Statistics Cards - Clickable */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -404,15 +433,19 @@ export function TenantsPage({
               </div>
             </div>
           </div>
+          </>
+          )}
         </div>
       </div>
 
       {/* Add Tenant Dialog */}
-      <AddTenantDialog
-        open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddTenant}
-      />
+      {hasUnitsConfigured && (
+        <AddTenantDialog
+          open={isAddDialogOpen}
+          onOpenChange={setIsAddDialogOpen}
+          onAdd={handleAddTenant}
+        />
+      )}
     </div>
   );
 }

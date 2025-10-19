@@ -3,19 +3,21 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Separator } from "./ui/separator";
 import { User, Settings, HelpCircle, LogOut } from "lucide-react";
+import { UserRole } from "./UserManagementPage";
 
 interface ProfileDropdownProps {
   onLogout?: () => void;
   onNavigate?: (view: string) => void;
+  currentUser?: UserRole;
 }
 
-export function ProfileDropdown({ onLogout, onNavigate }: ProfileDropdownProps) {
+export function ProfileDropdown({ onLogout, onNavigate, currentUser }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const userInfo = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Property Manager",
+    name: currentUser?.name || "John Doe",
+    email: currentUser?.email || "john.doe@example.com",
+    role: currentUser?.role ? currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1) : "Property Manager",
     avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdHxlbnwxfHx8fDE3NjAzOTUxMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
   };
 

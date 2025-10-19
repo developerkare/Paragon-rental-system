@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { Trash2 } from "lucide-react";
+import { Badge } from "./ui/badge";
+import { Trash2, Edit, AlertCircle } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 export interface Apartment {
@@ -8,6 +9,7 @@ export interface Apartment {
   name: string;
   description: string;
   imageUrl: string;
+  hasUnitsConfigured?: boolean; // Track if units have been added to this apartment
 }
 
 interface ApartmentCardProps {
@@ -16,9 +18,21 @@ interface ApartmentCardProps {
   isSelected: boolean;
   onSelect: (id: string) => void;
   onViewTenants: (apartment: Apartment) => void;
+  onEdit?: (apartment: Apartment) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
-export function ApartmentCard({ apartment, onDelete, isSelected, onSelect, onViewTenants }: ApartmentCardProps) {
+export function ApartmentCard({ 
+  apartment, 
+  onDelete, 
+  isSelected, 
+  onSelect, 
+  onViewTenants,
+  onEdit,
+  canEdit = true,
+  canDelete = true
+}: ApartmentCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -38,18 +52,35 @@ export function ApartmentCard({ apartment, onDelete, isSelected, onSelect, onVie
           className="size-full object-cover transition-transform duration-300 hover:scale-105"
         />
         
-        {/* Delete Button - Shows on hover */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(apartment.id);
-          }}
-          className={`absolute top-3 right-3 size-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 ${
-            isHovered ? "opacity-100 scale-100" : "opacity-0 scale-90"
-          }`}
-        >
-          <Trash2 className="size-5" />
-        </button>
+        {/* Action Buttons - Shows on hover */}
+        <div className={`absolute top-3 right-3 flex gap-2 transition-all duration-200 ${
+          isHovered ? "opacity-100 scale-100" : "opacity-0 scale-90"
+        }`}>
+          {canEdit && onEdit && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(apartment);
+              }}
+              className="size-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg"
+              title="Edit apartment"
+            >
+              <Edit className="size-5" />
+            </button>
+          )}
+          {canDelete && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(apartment.id);
+              }}
+              className="size-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg"
+              title="Delete apartment"
+            >
+              <Trash2 className="size-5" />
+            </button>
+          )}
+        </div>
 
         {/* Selection Indicator */}
         {isSelected && (
@@ -71,7 +102,15 @@ export function ApartmentCard({ apartment, onDelete, isSelected, onSelect, onVie
 
       {/* Card Content */}
       <div className="p-4">
-        <h3 className="mb-2">{apartment.name}</h3>
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3 className="flex-1">{apartment.name}</h3>
+          {apartment.hasUnitsConfigured === false && (
+            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300 flex items-center gap-1">
+              <AlertCircle className="size-3" />
+              No Units
+            </Badge>
+          )}
+        </div>
         <p className="text-neutral-600 mb-4 line-clamp-2">{apartment.description}</p>
         <Button
           onClick={(e) => {

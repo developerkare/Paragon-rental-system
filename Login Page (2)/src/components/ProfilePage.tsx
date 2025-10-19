@@ -5,19 +5,21 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
-import { Mail, Phone, MapPin, Calendar, Edit } from "lucide-react";
+import { Mail, Phone, MapPin, Calendar, Edit, TrendingUp, ArrowRight, BarChart3 } from "lucide-react";
+import { UserRole } from "./UserManagementPage";
 
 interface ProfilePageProps {
   onLogout: () => void;
   onNavigate: (view: string) => void;
+  currentUser?: UserRole;
 }
 
-export function ProfilePage({ onLogout, onNavigate }: ProfilePageProps) {
+export function ProfilePage({ onLogout, onNavigate, currentUser }: ProfilePageProps) {
   const userInfo = {
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: currentUser?.name || "John Doe",
+    email: currentUser?.email || "john.doe@example.com",
     phone: "+1 (555) 123-4567",
-    role: "Property Manager",
+    role: currentUser?.role ? currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1) : "Property Manager",
     address: "123 Main Street, New York, NY 10001",
     joinDate: "January 15, 2023",
     avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdHxlbnwxfHx8fDE3NjAzOTUxMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -32,7 +34,7 @@ export function ProfilePage({ onLogout, onNavigate }: ProfilePageProps) {
 
   return (
     <div className="size-full flex flex-col bg-neutral-50">
-      <Navigation onLogout={onLogout} onNavigate={onNavigate} />
+      <Navigation onLogout={onLogout} onNavigate={onNavigate} currentView="profile" currentUser={currentUser} />
 
       <div className="flex-1 overflow-auto">
         <div className="max-w-5xl mx-auto p-8">
@@ -111,10 +113,10 @@ export function ProfilePage({ onLogout, onNavigate }: ProfilePageProps) {
             </CardContent>
           </Card>
 
-          {/* Statistics */}
-          <Card>
+          {/* Quick Statistics */}
+          <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Account Statistics</CardTitle>
+              <CardTitle>Quick Statistics</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -125,6 +127,37 @@ export function ProfilePage({ onLogout, onNavigate }: ProfilePageProps) {
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Financial Reports Link */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-blue-100">
+            <CardContent className="pt-6">
+              <button
+                onClick={() => onNavigate("financialReports")}
+                className="w-full flex items-center justify-between p-4 text-left"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="h-14 w-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <BarChart3 className="h-7 w-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-neutral-900 mb-1">Financial Reports & Analytics</h3>
+                    <p className="text-neutral-600">
+                      View detailed income reports, payment history, and analytics from all properties
+                    </p>
+                    <div className="flex items-center gap-4 mt-2 text-sm text-neutral-600">
+                      <span className="flex items-center gap-1">
+                        <TrendingUp className="h-4 w-4 text-green-600" />
+                        Revenue Tracking
+                      </span>
+                      <span>• Advanced Filters</span>
+                      <span>• Export Reports</span>
+                    </div>
+                  </div>
+                </div>
+                <ArrowRight className="h-6 w-6 text-blue-600" />
+              </button>
             </CardContent>
           </Card>
         </div>

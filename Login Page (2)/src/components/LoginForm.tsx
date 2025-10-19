@@ -3,10 +3,26 @@ import { motion } from "motion/react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User, Shield, Wrench, Calculator } from "lucide-react";
+import { toast } from "sonner@2.0.3";
+
+export interface UserCredentials {
+  email: string;
+  password: string;
+  role: "admin" | "manager" | "caretaker" | "accountant";
+  name: string;
+}
+
+// Sample accounts for demo
+export const sampleAccounts: UserCredentials[] = [
+  { email: "admin@company.com", password: "admin123", role: "admin", name: "Admin User" },
+  { email: "manager@company.com", password: "manager123", role: "manager", name: "John Manager" },
+  { email: "caretaker@company.com", password: "caretaker123", role: "caretaker", name: "Mike Caretaker" },
+  { email: "accountant@company.com", password: "accountant123", role: "accountant", name: "Sarah Accountant" },
+];
 
 interface LoginFormProps {
-  onLogin: () => void;
+  onLogin: (user: UserCredentials) => void;
 }
 
 export function LoginForm({ onLogin }: LoginFormProps) {
@@ -16,8 +32,30 @@ export function LoginForm({ onLogin }: LoginFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { username, password });
-    onLogin();
+    
+    // Check credentials
+    const user = sampleAccounts.find(
+      acc => acc.email === username && acc.password === password
+    );
+    
+    if (user) {
+      toast.success(`Welcome back, ${user.name}!`, {
+        description: `Logged in as ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`,
+      });
+      onLogin(user);
+    } else {
+      toast.error("Invalid credentials", {
+        description: "Please check your email and password",
+      });
+    }
+  };
+
+  const quickLogin = (account: UserCredentials) => {
+    setUsername(account.email);
+    setPassword(account.password);
+    toast.info("Quick fill completed", {
+      description: "Click Login to continue",
+    });
   };
 
   return (
@@ -108,13 +146,36 @@ export function LoginForm({ onLogin }: LoginFormProps) {
               <button
                 type="button"
                 className="text-sky-500 hover:text-sky-600 transition-colors hover:underline"
-                onClick={() => console.log("Sign up clicked")}
+                onClick={() => toast.info("Contact your administrator", {
+                  description: "To create a new account"
+                })}
               >
                 Sign up
               </button>
             </p>
           </div>
         </form>
+
+        {/* Quick Login Demo Accounts */}
+        <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
+          <p className="text-xs text-neutral-500 mb-3 text-center">Quick Login (Demo)</p>
+          <div className="grid grid-cols-2 gap-2">
+            {sampleAccounts.map((account) => (
+              <button
+                key={account.email}
+                type="button"
+                onClick={() => quickLogin(account)}
+                className="flex items-center gap-2 p-2 text-xs bg-white border border-neutral-200 rounded hover:bg-neutral-50 transition-colors"
+              >
+                {account.role === "admin" && <Shield className="h-3 w-3 text-purple-500" />}
+                {account.role === "manager" && <User className="h-3 w-3 text-blue-500" />}
+                {account.role === "caretaker" && <Wrench className="h-3 w-3 text-orange-500" />}
+                {account.role === "accountant" && <Calculator className="h-3 w-3 text-green-500" />}
+                <span className="truncate">{account.role}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Decorative elements */}

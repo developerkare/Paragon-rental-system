@@ -20,6 +20,7 @@ interface UnitsPageProps {
   units: Unit[];
   setUnits: (units: Unit[]) => void;
   tenants: Tenant[];
+  currentUser?: any;
 }
 
 export interface UnitCharge {
@@ -49,7 +50,8 @@ export function UnitsPage({
   onBack,
   units,
   setUnits,
-  tenants
+  tenants,
+  currentUser
 }: UnitsPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "occupied" | "vacant">("all");
@@ -102,7 +104,7 @@ export function UnitsPage({
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <Navigation onLogout={onLogout} onNavigate={onNavigate} currentView="units" />
+      <Navigation onLogout={onLogout} onNavigate={onNavigate} currentView="units" currentUser={currentUser} />
       
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
@@ -113,12 +115,12 @@ export function UnitsPage({
             className="mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Tenants
+            Back to Houses
           </Button>
           
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-neutral-900 mb-2">{apartment.title} - Units Management</h1>
+              <h1 className="text-neutral-900 mb-2">{apartment.name} - Units Management</h1>
               <p className="text-neutral-600">Manage your property units, rent, and charges</p>
             </div>
             <div className="flex gap-2">

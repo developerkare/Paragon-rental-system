@@ -6,13 +6,15 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Mail, MessageCircle, Phone, Book } from "lucide-react";
+import { UserRole } from "./UserManagementPage";
 
 interface HelpSupportPageProps {
   onLogout: () => void;
   onNavigate: (view: string) => void;
+  currentUser?: UserRole;
 }
 
-export function HelpSupportPage({ onLogout, onNavigate }: HelpSupportPageProps) {
+export function HelpSupportPage({ onLogout, onNavigate, currentUser }: HelpSupportPageProps) {
   const faqs = [
     {
       question: "How do I add a new apartment property?",
@@ -65,7 +67,7 @@ export function HelpSupportPage({ onLogout, onNavigate }: HelpSupportPageProps) 
 
   return (
     <div className="size-full flex flex-col bg-neutral-50">
-      <Navigation onLogout={onLogout} onNavigate={onNavigate} />
+      <Navigation onLogout={onLogout} onNavigate={onNavigate} currentUser={currentUser} />
 
       <div className="flex-1 overflow-auto">
         <div className="max-w-5xl mx-auto p-8">
