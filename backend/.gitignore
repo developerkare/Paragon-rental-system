@@ -1,0 +1,61 @@
+# Node dependencies
+/node_modules/
+
+# Build output
+/dist/
+/build/
+lib/
+out/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editors/IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Misc caches
+.cache/
+.parcel-cache/
+.pnp.*
+/.vite/
+/.next/
+
+# Uploaded files / runtime artifacts
+uploads/
+tmp/
+temp/
+pids/
+*.pid
+
+# Lockfiles (uncomment if you want to ignore lockfiles)
+/# package-lock.json
+/# yarn.lock
+/# pnpm-lock.yaml
