@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LoginForm, UserCredentials } from "./components/LoginForm";
 import { BrandLogo } from "./components/BrandLogo";
 import { ApartmentDashboard } from "./components/ApartmentDashboard";
@@ -23,31 +23,6 @@ import { HousesManagementPage } from "./components/HousesManagementPage";
 import { Toaster } from "./components/ui/sonner";
 
 type View = "dashboard" | "profile" | "settings" | "help" | "tenants" | "activeTenants" | "failedToPay" | "tenantsLeft" | "vacantUnits" | "paymentHistory" | "activityLog" | "units" | "financialReports" | "userManagement" | "advertisements" | "houses";
-
-// Initialize with sample apartments
-const initialApartments: Apartment[] = [
-  {
-    id: "1",
-    name: "Sunset Apartments",
-    description: "Spacious 3-bedroom apartments with parking. Modern amenities and beautiful city views.",
-    imageUrl: "https://images.unsplash.com/photo-1515263487990-61b07816b324?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBhcGFydG1lbnQlMjBidWlsZGluZ3xlbnwxfHx8fDE3NjAzNjMxMTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    hasUnitsConfigured: true,
-  },
-  {
-    id: "2",
-    name: "Harbor View Residences",
-    description: "Luxury waterfront apartments with premium finishes and stunning harbor views.",
-    imageUrl: "https://images.unsplash.com/photo-1638454668466-e8dbd5462f20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvcnxlbnwxfHx8fDE3NjAyOTQ1ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    hasUnitsConfigured: false,
-  },
-  {
-    id: "3",
-    name: "Downtown Lofts",
-    description: "Urban living at its finest. Contemporary design with easy access to the city center.",
-    imageUrl: "https://images.unsplash.com/photo-1565363887715-8884629e09ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXNpZGVudGlhbCUyMGJ1aWxkaW5nfGVufDF8fHx8MTc2MDM0MTA4N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-    hasUnitsConfigured: false,
-  },
-];
 
 // Initialize with sample units
 const initialUnits: Unit[] = [
@@ -85,7 +60,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentView, setCurrentView] = useState<View>("dashboard");
   const [selectedApartment, setSelectedApartment] = useState<Apartment | null>(null);
-  const [apartments, setApartments] = useState<Apartment[]>(initialApartments);
+  const [apartments, setApartments] = useState<Apartment[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [vacantUnits, setVacantUnits] = useState<string[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -106,6 +81,21 @@ export default function App() {
     tempPassword: false,
     permissions: defaultPermissionsByRole.admin
   });
+
+  useEffect(() => {
+    async function loadApartments() {
+      try {
+        const res = await fetch('http://localhost:5000/api/apartments');
+        if (!res.ok) throw new Error('Failed to fetch apartments');
+        const data = await res.json();
+        // data already contains id, name, description, imageUrl, hasUnitsConfigured
+        setApartments(data);
+      } catch (err) {
+        console.error('Error loading apartments:', err);
+      }
+    }
+    loadApartments();
+  }, []);
 
   const handleLogin = (credentials: UserCredentials) => {
     setIsLoggedIn(true);

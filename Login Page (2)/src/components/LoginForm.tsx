@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Eye, EyeOff, User, Shield, Wrench, Calculator } from "lucide-react";
 import { toast } from "sonner@2.0.3";
+import axios from 'axios';
 
 export interface UserCredentials {
   email: string;
@@ -30,23 +31,30 @@ export function LoginForm({ onLogin }: LoginFormProps) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check credentials
-    const user = sampleAccounts.find(
-      acc => acc.email === username && acc.password === password
-    );
-    
-    if (user) {
-      toast.success(`Welcome back, ${user.name}!`, {
-        description: `Logged in as ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`,
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email: username,
+        password
       });
-      onLogin(user);
-    } else {
-      toast.error("Invalid credentials", {
-        description: "Please check your email and password",
+
+      // Store the token in localStorage
+      localStorage.setItem('token', response.data.token);
+      
+      // Call the onLogin with user data
+      onLogin({
+        email: username,
+        password,
+        name: response.data.user.name,
+        role: response.data.user.role
       });
+      
+      toast.success('Login successful!');
+    } catch (error) {
+      console.error('Login failed:', error);
+      toast.error('Invalid credentials. Please try again.');
     }
   };
 

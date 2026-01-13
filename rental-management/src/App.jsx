@@ -26,6 +26,7 @@ export default function App() {
           <Link to="/home">Houses</Link>
           <Link to="/billing">Billing</Link>
           <Link to="/tenants">Tenants Mgmt</Link>
+          
         </nav>
 
         {/* Main Content */}

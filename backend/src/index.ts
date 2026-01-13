@@ -1,17 +1,34 @@
 import express from 'express';
-import { json } from 'body-parser';
-import routes from './routes';
-import { logger } from './utils/logger';
-import { config } from './config';
+import path from 'path';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import connectDB from './config/db';
+import authRoutes from './routes/auth';
+import apartmentsRoutes from './routes/apartments'; // added
 
+dotenv.config();
 const app = express();
-const PORT = config.PORT || 3000;
 
-app.use(json());
-app.use(logger);
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
 
-routes(app);
+// API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/apartments', apartmentsRoutes); // added
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// Serve frontend build (adjust path if needed)
+const frontendDist = path.join(process.cwd(), '..', 'Login Page (2)', 'dist');
+app.use(express.static(frontendDist));
+app.get('*', (req, res) => res.sendFile(path.join(frontendDist, 'index.html')));
+
+const PORT = process.env.PORT || 5000;
+connectDB()
+  .then(() => app.listen(PORT, () => console.log(`Server running on ${PORT}`)))
+  .catch(err => {
+    console.error('Failed to start server', err);
+    process.exit(1);
+  });

@@ -1,3 +1,5 @@
-export * from './User';
-export * from './Product';
-export * from './Order';
+import User from './User';
+import Apartment from './Apartment';
+import Unit from './Unit';
+
+export { User, Apartment, Unit };
