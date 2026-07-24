@@ -10,6 +10,7 @@ export interface ICharge {
 
 export interface IUnit extends Document {
   apartment?: Types.ObjectId;
+  tenantId?: Types.ObjectId;
   unitNumber: string;
   unitType?: string;
   baseRent: number;
@@ -18,6 +19,7 @@ export interface IUnit extends Document {
   floor?: number;
   squareFeet?: number;
   createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const ChargeSchema = new Schema<ICharge>({
@@ -30,14 +32,16 @@ const ChargeSchema = new Schema<ICharge>({
 
 const UnitSchema = new Schema<IUnit>({
   apartment: { type: Schema.Types.ObjectId, ref: 'Apartment' },
+  tenantId: { type: Schema.Types.ObjectId, ref: 'Tenant' },
   unitNumber: { type: String, required: true },
   unitType: { type: String },
   baseRent: { type: Number, required: true },
   charges: { type: [ChargeSchema], default: [] },
-  status: { type: String, default: 'vacant' },
+  status: { type: String, default: 'vacant', enum: ['occupied', 'vacant'] },
   floor: { type: Number },
   squareFeet: { type: Number },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 export default model<IUnit>('Unit', UnitSchema);

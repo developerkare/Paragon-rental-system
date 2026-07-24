@@ -1,0 +1,13 @@
+# Backup of ActiveTenantsPage.tsx
+
+This file was backed up before connecting tenant data to fetch from database.
+
+Original location: c:\Users\Hp\Paragon-rental-system\Login_Page\src\components\ActiveTenantsPage.tsx
+
+The component displays active tenants with:
+- Search functionality
+- Payment status and deadline management
+- Mark tenant as left option
+- Cash payment recording
+- Email all functionality
+- Tenant detail dialogs

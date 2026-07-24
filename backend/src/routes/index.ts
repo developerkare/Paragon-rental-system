@@ -1,11 +1,7 @@
-import { Router } from 'express';
-import { exampleController } from '../controllers/exampleController';
+import { Router, Express } from 'express';
 
 const router = Router();
 
-router.get('/example', exampleController.getExample);
-router.post('/example', exampleController.createExample);
-
-export default (app) => {
+export default (app: Express) => {
     app.use('/api', router);
 };

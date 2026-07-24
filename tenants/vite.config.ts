@@ -5,6 +5,10 @@
 
   export default defineConfig({
     plugins: [react()],
+    server: {
+      port: 5176,
+      host: 'localhost'
+    },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {

@@ -1,0 +1,11 @@
+# Backup of FailedToPayPage.tsx
+
+This file was backed up before connecting tenant data to fetch from database.
+
+Original location: c:\Users\Hp\Paragon-rental-system\Login_Page\src\components\FailedToPayPage.tsx
+
+The component displays tenants with unpaid rent:
+- Filters tenants by unpaid payment status
+- Shows total unpaid amount
+- Deadlines and rent details
+- Options to extend deadline or mark paid

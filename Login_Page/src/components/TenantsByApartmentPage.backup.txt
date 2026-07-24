@@ -1,0 +1,12 @@
+# Backup of TenantsByApartmentPage.tsx
+
+This file was backed up before connecting tenant data to fetch from database.
+
+Original location: c:\Users\Hp\Paragon-rental-system\Login_Page\src\components\TenantsByApartmentPage.tsx
+
+The component displays tenants filtered by apartment:
+- Apartment selector dropdown
+- Tenant search functionality
+- Tenant detail dialogs
+- Create tenant account option
+- Maps tenants to their assigned properties

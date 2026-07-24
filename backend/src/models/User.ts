@@ -8,7 +8,7 @@ export interface IUser extends Document {
   createdAt: Date;
 }
 
-const UserSchema = new Schema<IUser>({
+const UserSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
@@ -16,4 +16,4 @@ const UserSchema = new Schema<IUser>({
   createdAt: { type: Date, default: Date.now }
 });
 
-export default model<IUser>('User', UserSchema);
+export default model('User', UserSchema);

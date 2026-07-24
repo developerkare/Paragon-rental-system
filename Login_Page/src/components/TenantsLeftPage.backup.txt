@@ -1,0 +1,11 @@
+# Backup of TenantsLeftPage.tsx
+
+This file was backed up before connecting tenant data to fetch from database.
+
+Original location: c:\Users\Hp\Paragon-rental-system\Login_Page\src\components\TenantsLeftPage.tsx
+
+The component displays tenants who have left:
+- Search functionality
+- Tenant detail dialogs  
+- Option to return tenant as active
+- Displays left reason and left date

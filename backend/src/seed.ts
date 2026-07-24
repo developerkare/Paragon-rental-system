@@ -5,36 +5,44 @@ import bcrypt from 'bcryptjs';
 async function main() {
   await connectDB();
 
-  // Clear existing seeded collections (optional)
-  await Apartment.deleteMany({});
-  await Unit.deleteMany({});
-
-  // Apartments data (copied from frontend App.tsx)
+  // Apartments data
   const apartmentsData = [
     {
       name: "Sunset Apartments",
       description: "Spacious 3-bedroom apartments with parking. Modern amenities and beautiful city views.",
       imageUrl: "https://images.unsplash.com/photo-1515263487990-61b07816b324?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      address: "123 Sunset Boulevard, Los Angeles, CA",
       hasUnitsConfigured: true
     },
     {
       name: "Harbor View Residences",
       description: "Luxury waterfront apartments with premium finishes and stunning harbor views.",
       imageUrl: "https://images.unsplash.com/photo-1638454668466-e8dbd5462f20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      address: "456 Harbor Lane, San Francisco, CA",
       hasUnitsConfigured: false
     },
     {
       name: "Downtown Lofts",
       description: "Urban living at its finest. Contemporary design with easy access to the city center.",
       imageUrl: "https://images.unsplash.com/photo-1565363887715-8884629e09ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      address: "789 Downtown Street, New York, NY",
       hasUnitsConfigured: false
     }
   ];
 
-  const createdApartments = await Apartment.insertMany(apartmentsData);
-  console.log(`Inserted ${createdApartments.length} apartments.`);
+  // Check if apartments already exist
+  const existingApartmentCount = await Apartment.countDocuments();
+  let createdApartments: any[] = [];
 
-  // Units data (copied from frontend App.tsx) — link to first apartment
+  if (existingApartmentCount === 0) {
+    createdApartments = await Apartment.insertMany(apartmentsData);
+    console.log(`✓ Inserted ${createdApartments.length} apartments.`);
+  } else {
+    console.log(`✓ Apartments already exist (${existingApartmentCount} found). Skipping apartment insertion.`);
+    createdApartments = await Apartment.find({});
+  }
+
+  // Units data — link to first apartment
   const unitsData = [
     {
       apartment: createdApartments[0]._id,
@@ -66,27 +74,62 @@ async function main() {
     }
   ];
 
-  const createdUnits = await Unit.insertMany(unitsData);
-  console.log(`Inserted ${createdUnits.length} units.`);
-
-  // Seed admin user (if not exists)
-  const adminEmail = 'admin@company.com';
-  const existing = await User.findOne({ email: adminEmail });
-  if (!existing) {
-    const passwordHash = await bcrypt.hash('admin123', 10);
-    const admin = new User({
-      name: 'Admin User',
-      email: adminEmail,
-      passwordHash,
-      role: 'admin'
-    });
-    await admin.save();
-    console.log('Admin user created: admin@company.com / admin123');
+  // Check if units already exist
+  const existingUnitsCount = await Unit.countDocuments();
+  if (existingUnitsCount === 0) {
+    await Unit.insertMany(unitsData);
+    console.log(`✓ Inserted ${unitsData.length} units.`);
   } else {
-    console.log('Admin user already exists.');
+    console.log(`✓ Units already exist (${existingUnitsCount} found). Skipping units insertion.`);
   }
 
-  console.log('Seed complete.');
+  // Seed demo users for all login roles (if not exists)
+  const demoUsers = [
+    {
+      name: 'Admin User',
+      email: 'admin@company.com',
+      password: 'admin123',
+      role: 'admin'
+    },
+    {
+      name: 'John Manager',
+      email: 'manager@company.com',
+      password: 'manager123',
+      role: 'manager'
+    },
+    {
+      name: 'Mike Caretaker',
+      email: 'caretaker@company.com',
+      password: 'caretaker123',
+      role: 'caretaker'
+    },
+    {
+      name: 'Sarah Accountant',
+      email: 'accountant@company.com',
+      password: 'accountant123',
+      role: 'accountant'
+    }
+  ];
+
+  for (const demoUser of demoUsers) {
+    const existing = await User.findOne({ email: demoUser.email });
+    if (existing) {
+      console.log(`✓ User already exists: ${demoUser.email}`);
+      continue;
+    }
+
+    const passwordHash = await bcrypt.hash(demoUser.password, 10);
+    const user = new User({
+      name: demoUser.name,
+      email: demoUser.email,
+      passwordHash,
+      role: demoUser.role
+    });
+    await user.save();
+    console.log(`✓ User created: ${demoUser.email} / ${demoUser.password}`);
+  }
+
+  console.log('\n✓ Seed complete.');
   process.exit(0);
 }
 
